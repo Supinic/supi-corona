@@ -59,9 +59,9 @@ module.exports = async function save (region, rows) {
 			New_Recoveries: newRecoveries ?? null,
 			
 			All_Cases: allCases ?? 0,
-			All_Criticals: allCriticals ?? 0,
-			All_Deaths: allDeaths ?? 0,
-			All_Recoveries: allRecoveries ?? 0
+			All_Criticals: allCriticals ?? null,
+			All_Deaths: allDeaths ?? null,
+			All_Recoveries: allRecoveries ?? null
 		});
 		
 		await statusRow.save();
