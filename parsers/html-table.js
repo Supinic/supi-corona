@@ -49,7 +49,7 @@ module.exports = async function parse (options = {}) {
 				value = Number(selector.text().replace(/,/g, "")) || null;
 			}
 			else {
-				const country = selector.text();
+				const country = selector.text().trim();
 				value = {
 					country,
 					link: (node.firstChild?.tagName === "a")

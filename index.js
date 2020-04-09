@@ -42,7 +42,18 @@
 			const data = await sb.Corona.parsers.htmlTable({
 				url: "https://www.worldometers.info/coronavirus/",
 				selector: "#main_table_countries_today tbody tr",
-				ignoredCountries: ["total", "total:", "world"],
+				ignoredCountries: [
+					"total",
+					"total:",
+					"world",
+					"europe",
+					"north america",
+					"asia",
+					"south america",
+					"africa",
+					"oceania",
+					""
+				],
 				countryModificator: (country) => {
 					if (country === "S. Korea") {
 						country = "South Korea";
@@ -82,7 +93,11 @@
 			const data = await sb.Corona.parsers.htmlTable({
 				url: "https://www.worldometers.info/coronavirus/country/us/",
 				selector: "#usa_table_countries_today tbody tr",
-				ignoredCountries: ["total", "total:"],
+				ignoredCountries: [
+					"total",
+					"total:",
+					"usa total"
+				],
 				fields: [
 					"country", 
 					"allCases",
