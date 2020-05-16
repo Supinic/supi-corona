@@ -2,7 +2,9 @@ module.exports = async function parse (options = {}) {
 	const got = require("got");
 	const cheerio = require("cheerio");
 	options.ignoredCountries = options.ignoredCountries || [];	
-	
+
+	const countryIndex = options.fields.findIndex(i => i === "country") ?? 0;
+
 	let html = null;
 	try {
 		html = await got({
@@ -45,7 +47,7 @@ module.exports = async function parse (options = {}) {
 			let value = null;
 			const selector = $(node);
 
-			if (ind !== 0) {
+			if (ind !== countryIndex) {
 				value = Number(selector.text().replace(/,/g, "")) || null;
 			}
 			else {
@@ -61,10 +63,10 @@ module.exports = async function parse (options = {}) {
 			return value;
 		});
 		
-		if (!values[0]?.country) {
+		if (!values[countryIndex]?.country) {
 			continue;
 		}
-		else if (options.ignoredCountries.includes(values[0].country.toLowerCase())) {
+		else if (options.ignoredCountries.includes(values[countryIndex].country.toLowerCase())) {
 			continue;
 		}
 

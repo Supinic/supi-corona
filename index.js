@@ -41,7 +41,7 @@
 		callback: async () => {
 			const data = await sb.Corona.parsers.htmlTable({
 				url: "https://www.worldometers.info/coronavirus/",
-				selector: "#main_table_countries_today tbody tr",
+				selector: "#main_table_countries_today tbody tr:not([data-continent])",
 				ignoredCountries: [
 					"total",
 					"total:",
@@ -63,6 +63,7 @@
 					return country;
 				},
 				fields: [
+					"rank",
 					"country", 
 					"allCases", 
 					"newCases", 
