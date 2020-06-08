@@ -5,9 +5,7 @@
 	process.env.MARIA_CONNECTION_LIMIT = 5;
 
 	const { CronJob } = require("cron");
-	const got = require("got");
-	const cheerio = require("cheerio");
-	const save = require("./save.js"); // lolol
+	const save = require("./save.js");
 	
 	await require("supi-core")("sb", {
 		whitelist: [
@@ -69,7 +67,8 @@
 					"newCases", 
 					"allDeaths", 
 					"newDeaths",
-					"allRecoveries", 
+					"allRecoveries",
+					null, // unknown value, maybe attributes?
 					"active", 
 					"allCritical", 
 					"cpm", 
