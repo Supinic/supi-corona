@@ -2,9 +2,29 @@ module.exports = async function save (region, rows) {
 	if (!sb.Query) {
 		throw new Error("No database connector");
 	}
-	
+
 	const processedPlaces = [];
 	const now = new sb.Date().discardTimeUnits("s", "ms");
+	const batch = await sb.Query.getBatch(
+		"corona",
+		"Status",
+		[
+			"Date",
+			"Place",
+			"Tests",
+
+			"New_Cases",
+			"New_Criticals",
+			"New_Deaths",
+			"New_Recoveries",
+
+			"All_Cases",
+			"All_Criticals",
+			"All_Deaths",
+			"All_Recoveries"
+		]
+	);
+
 	for (const row of rows) {
 		const { 
 			country,
@@ -47,27 +67,28 @@ module.exports = async function save (region, rows) {
 		}
 
 		processedPlaces.push(targetCountry.ID);
-		const statusRow = await sb.Query.getRow("corona", "Status");
-		statusRow.setValues({
+
+		batch.add({
 			Date: now,
 			Place: targetCountry.ID,
 			Tests: tests ?? null,
-			
+
 			New_Cases: newCases ?? null,
 			New_Criticals: newCriticals ?? null,
 			New_Deaths: newDeaths ?? null,
 			New_Recoveries: newRecoveries ?? null,
-			
+
 			All_Cases: allCases ?? 0,
 			All_Criticals: allCriticals ?? null,
 			All_Deaths: allDeaths ?? null,
 			All_Recoveries: allRecoveries ?? null
 		});
-		
-		await statusRow.save();
-	}	
+	}
 
-	const updateResult = await sb.Query.getRecordUpdater(rs => rs
+	await batch.insert();
+	batch.destroy();
+
+	await sb.Query.getRecordUpdater(rs => rs
 		.update("corona", "Status")
 		.set("Latest", false)
 		.where("Place IN %n+", processedPlaces)
