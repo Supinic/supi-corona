@@ -2,7 +2,7 @@
 	process.env.MARIA_USER = "corona";
 	process.env.MARIA_HOST = "localhost";
 	process.env.MARIA_PASSWORD = "penis123";
-	process.env.MARIA_CONNECTION_LIMIT = 5;
+	process.env.MARIA_CONNECTION_LIMIT = 50;
 
 	const { CronJob } = require("cron");
 	const save = require("./save.js");
@@ -35,7 +35,7 @@
 		
 	sb.Corona.cron.push({
 		name: "global",
-		expression: "0 */30 * * * *",
+		expression: "0 40 */6 * * *",
 		callback: async () => {
 			const data = await sb.Corona.parsers.htmlTable({
 				url: "https://www.worldometers.info/coronavirus/",
@@ -88,7 +88,7 @@
 	
 	sb.Corona.cron.push({
 		name: "usa-states",
-		expression: "0 */30 * * * *",
+		expression: "0 40 */6 * * *",
 		callback: async () => {
 			const data = await sb.Corona.parsers.htmlTable({
 				url: "https://www.worldometers.info/coronavirus/country/us/",
@@ -117,7 +117,7 @@
 	
 	sb.Corona.cron.push({
 		name: "italy-regions",
-		expression: "0 30 19 * * *",
+		expression: "0 40 */6 * * *",
 		callback: async () => {
 			const code = new sb.Date().format("Ymd");
 			const data = await sb.Corona.parsers.github({
@@ -155,7 +155,7 @@
 		
 	sb.Corona.cron.push({
 		name: "romania-regions",
-		expression: "0 0 * * * *",
+		expression: "0 40 */6 * * *",
 		callback: async () => {
 			const data = await sb.Corona.parsers.htmlTable({
 				url: "https://covid19ro.org/",
