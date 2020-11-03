@@ -34,6 +34,7 @@
 	}
 		
 	sb.Corona.cron.push({
+		active: true,
 		name: "global",
 		expression: "0 40 */6 * * *",
 		callback: async () => {
@@ -87,6 +88,7 @@
 	});
 	
 	sb.Corona.cron.push({
+		active: true,
 		name: "usa-states",
 		expression: "0 40 */6 * * *",
 		callback: async () => {
@@ -116,6 +118,7 @@
 	});
 	
 	sb.Corona.cron.push({
+		active: true,
 		name: "italy-regions",
 		expression: "0 40 */6 * * *",
 		callback: async () => {
@@ -181,7 +184,7 @@
 	});
 		
 	for (const row of sb.Corona.cron) {
-		if (!row.active) {
+		if (row.active === false) {
 			continue;
 		}
 
