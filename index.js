@@ -154,6 +154,7 @@
 	});
 		
 	sb.Corona.cron.push({
+		active: false,
 		name: "romania-regions",
 		expression: "0 40 */6 * * *",
 		callback: async () => {
@@ -180,6 +181,10 @@
 	});
 		
 	for (const row of sb.Corona.cron) {
+		if (!row.active) {
+			continue;
+		}
+
 		row.job = new CronJob(row.expression, row.callback);
 		row.job.start();
 		
