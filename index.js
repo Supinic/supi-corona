@@ -2,11 +2,11 @@
 	process.env.MARIA_USER = "corona";
 	process.env.MARIA_HOST = "localhost";
 	process.env.MARIA_PASSWORD = "penis123";
-	process.env.MARIA_CONNECTION_LIMIT = 50;
+	process.env.MARIA_CONNECTION_LIMIT = 5;
 
 	const { CronJob } = require("cron");
 	const save = require("./save.js");
-	
+
 	await require("supi-core")("sb", {
 		whitelist: [
 			"objects/date",
