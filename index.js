@@ -20,7 +20,7 @@
 		parsers: {},
 		cron: [],
 		places: await sb.Query.getRecordset(rs => rs
-			.select("ID", "Name", "Parent")
+			.select("ID", "Name", "ISO_3 AS Code", "Parent")
 			.from("corona", "Place")
 		)
 	};
@@ -215,7 +215,7 @@
 		        "daily_vaccinations_per_million": 10651
 			 */
 			const promises = sb.Corona.places.filter(i => !i.Parent).map(async (place) => {
-				const match = data.find(i => i.country === place.Name);
+				const match = data.find(i => i.country === place.Name || i.iso_code === place.Code);
 				if (!match) {
 					return;
 				}
