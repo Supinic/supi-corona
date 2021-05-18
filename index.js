@@ -5,6 +5,7 @@
 	process.env.MARIA_CONNECTION_LIMIT = 5;
 
 	const { CronJob } = require("cron");
+	const got = require("got");
 	const save = require("./save.js");
 
 	await require("supi-core")("sb", {
@@ -180,6 +181,62 @@
 			}
 						
 			await save("Romania", data.rows);			
+		}
+	});
+
+	sb.Corona.cron.push({
+		active: true,
+		name: "vaccine-updater",
+		expression: "0 0 */8 * * *",
+		callback: async () => {
+			const response = await got({
+				url: "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.json"
+			});
+
+			if (response.statusCode !== 200) {
+				console.warn("Could not parse vaccination data");
+			}
+
+			const today = new sb.Date().addDays(-1).format("Y-m-d");
+			const data = response.body;
+
+			/*
+			    "date": "2021-04-16",
+		        "total_vaccinations": 61114,
+		        "people_vaccinated": 33808,
+		        "people_fully_vaccinated": 27306,
+		        "daily_vaccinations_raw": 477,
+		        "daily_vaccinations": 700,
+		        "total_vaccinations_per_hundred": 92.99,
+		        "people_vaccinated_per_hundred": 51.44,
+		        "people_fully_vaccinated_per_hundred": 41.55,
+		        "daily_vaccinations_per_million": 10651
+			 */
+			const promises = sb.Corona.places.filter(i => !i.Parent).map(async (place) => {
+				const match = data.find(i => i.country === place.Name);
+				if (!match) {
+					return;
+				}
+
+				const item = match.data.find(i => i.date === today);
+				if (!item) {
+					return;
+				}
+
+				const row = await sb.Query.getRow("corona", "Vaccine_Status");
+				row.setValues({
+					Place: place.ID,
+					Date: today,
+					Total: item.total_vaccinations ?? null,
+					New: item.daily_vaccinations ?? null,
+					People: item.people_vaccinated ?? null,
+					People_Fully: item.people_fully_vaccinated ?? null
+				});
+
+				await row.save();
+			});
+
+			await Promise.all(promises);
 		}
 	});
 		
