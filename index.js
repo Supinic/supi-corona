@@ -187,7 +187,7 @@
 	sb.Corona.cron.push({
 		active: true,
 		name: "vaccine-updater",
-		expression: "0 0 */8 * * *",
+		expression: "0 30 3 * * *", // run daily at 03:30
 		callback: async () => {
 			const response = await got({
 				url: "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.json",
@@ -235,7 +235,7 @@
 					People_Fully: item.people_fully_vaccinated ?? null
 				});
 
-				await row.save();
+				await row.save({ ignore: true });
 			});
 
 			await Promise.all(promises);
