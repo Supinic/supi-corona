@@ -190,7 +190,8 @@
 		expression: "0 0 */8 * * *",
 		callback: async () => {
 			const response = await got({
-				url: "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.json"
+				url: "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.json",
+				responseType: "json"
 			});
 
 			if (response.statusCode !== 200) {
