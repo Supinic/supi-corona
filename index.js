@@ -198,7 +198,8 @@
 				console.warn("Could not parse vaccination data");
 			}
 
-			const today = new sb.Date().addDays(-1).format("Y-m-d");
+			const today = new sb.Date().addDays(-1);
+			const todayString = new sb.Date().addDays(-1).format("Y-m-d");
 			const data = response.body;
 
 			/*
@@ -219,7 +220,7 @@
 					return;
 				}
 
-				const item = match.data.find(i => i.date === today);
+				const item = match.data.find(i => i.date === todayString);
 				if (!item) {
 					return;
 				}
